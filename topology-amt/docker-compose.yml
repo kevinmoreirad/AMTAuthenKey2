@@ -7,13 +7,13 @@ services:
      - "9990:9990"
   mysql:
     build: ../images/mysql
-    environement:
+    environment:
     - MYSQL_ROOT_PASSWORD=adminpw
     ports:
     - "3306:3306"
   phpmyadmin:
     build: ../images/phpmyadmin
-    environement:
+    environment:
     - MYSQL_ROOT_PASSWORD=adminpw
     ports:
     - "6060:80"

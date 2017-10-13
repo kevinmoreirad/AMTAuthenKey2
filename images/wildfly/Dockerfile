@@ -1,7 +1,8 @@
 FROM jboss/wildfly:10.1.0.Final
 
-COPY data/mysql-connector-java-5.1.44-bin.jar /opt/jboss/wildfly/bin/standalone/deployments
-COPY data/standalone.xml /opt/jboss/wildfly/bin/standalone/configuration
+ADD data/AMTProjectBootcamp-1.0-SNAPSHOT.war /opt/jboss/wildfly/standalone/deployments/AMTProjectBootcamp-1.0-SNAPSHOT.war
+ADD data/mysql-connector-java-5.1.44-bin.jar /opt/jboss/wildfly/standalone/deployments/mysql-connector-java-5.1.44-bin.jar
+ADD data/standalone.xml /opt/jboss/wildfly/standalone/configuration/standalone.xml
 
 RUN /opt/jboss/wildfly/bin/add-user.sh admin admin --silent
 

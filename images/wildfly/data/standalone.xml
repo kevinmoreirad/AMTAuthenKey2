@@ -140,8 +140,8 @@
         <subsystem xmlns="urn:jboss:domain:bean-validation:1.0"/>
         <subsystem xmlns="urn:jboss:domain:datasources:4.0">
             <datasources>
-              <datasource jta="true" jndi-name="java:/jdbc/sakila" pool-name="sakilaDS" enabled="true" use-ccm="true">
-                  <connection-url>jdbc:mysql://db:3306/sakila</connection-url>
+              <datasource jta="true" jndi-name="java:/jdbc/db_amt" pool-name="db_amt" enabled="true" use-ccm="true">
+                  <connection-url>jdbc:mysql://db:3306/db_amt</connection-url>
                   <driver-class>com.mysql.jdbc.Driver</driver-class>
                   <driver>mysql-connector-java-5.1.44-bin.jar_com.mysql.jdbc.Driver_5_1</driver>
                   <security>

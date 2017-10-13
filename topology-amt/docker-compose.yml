@@ -1,7 +1,9 @@
 version: '2'
 services:
   wildfly:
-    build: ../images/wildfly
+    build:
+        context: ../
+        dockerfile: images/wildfly/Dockerfile
     links:
     - mysql:db
     ports:

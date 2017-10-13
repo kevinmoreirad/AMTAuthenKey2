@@ -2,6 +2,8 @@ version: '2'
 services:
   wildfly:
     build: ../images/wildfly
+    links:
+    - mysql:db
     ports:
      - "9090:8080"
      - "9990:9990"

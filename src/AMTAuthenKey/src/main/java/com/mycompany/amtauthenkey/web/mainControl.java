@@ -6,7 +6,7 @@
 package com.mycompany.amtauthenkey.web;
 
 import com.mycompany.amtauthenkey.model.AuthKey;
-import com.mycompany.amtauthenkey.servicies.AuthKeyManager;
+import com.mycompany.amtauthenkey.servicies.buisness.AuthKeyManager;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
@@ -37,14 +37,7 @@ public class mainControl extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
-                System.out.println("do Get mainControl");
-        //getting the username of the connected client.
-        String username = (String)request.getSession().getAttribute("username");
-        
-        
-        AuthKey authKey = authKeyManager.getRandomAuthKey(username);
-        
-        
+
         //giving the jsp the control of request and response
         request.getRequestDispatcher("pages/pageView.jsp").forward(request, response);
     };
@@ -63,12 +56,37 @@ public class mainControl extends HttpServlet {
             throws ServletException, IOException {
                 try (PrintWriter out = response.getWriter()) {
                     
+                    //setting current page first to 1
+                    if(request.getSession().getAttribute("currentPage") == null)
+                    {
+                        request.getSession().setAttribute("currentPage", "1");
+                    }
+                    if(request.getSession().getAttribute("nbRows") == null)
+                    {
+                        request.getSession().setAttribute("nbRows", "10");
+                    }
+                    if(request.getSession().getAttribute("orderBy") == null)
+                    {
+                        request.getSession().setAttribute("orderBy", "id ASC");
+                    }
+                    if(request.getSession().getAttribute("lastOrderBy") == null)
+                    {
+                        request.getSession().setAttribute("lastOrderBy", "id");
+                    }
+                    
+                    int nbRow = Integer.valueOf((String)request.getSession().getAttribute("nbRows"));
                      //getting the username of the connected client.
                     String username = (String)request.getSession().getAttribute("username");
-                    
-                    System.out.println("do Post mainControl");
+
                     String logout = (String)request.getParameter("logout");
                     String newUniqueKey = (String)request.getParameter("newUniqueKey");
+                    String newMultiKey = (String)request.getParameter("newMultiKey");
+                    String changePage = (String)request.getParameter("changePage");
+                    String orderBy = (String)request.getParameter("orderBy");
+                    String numberRows = ((String)request.getParameter("numberRows"));
+                    String modifyKey =(String)request.getParameter("modifyKey");
+                    
+                    int numberKeys = authKeyManager.getNbAuthKeys();
                     if(logout != null && logout.equals("logout"))
                     {
                         request.getSession().removeAttribute("username");
@@ -78,26 +96,101 @@ public class mainControl extends HttpServlet {
                     else
                     {
                         if(newUniqueKey != null && newUniqueKey.equals("newUniqueKey"))
-                        {
-                            
+                        {  
                             String startD = (String)request.getParameter("startDate");
                             String endD =   (String)request.getParameter("endDate");
-                            String[] listeStart = startD.split("-");
-                            String[] listeEnd = endD.split("-");
                             
-                            Date startDate = new Date(Integer.valueOf(listeStart[0]),
-                                    Integer.valueOf(listeStart[1]),
-                                    Integer.valueOf(listeStart[2]));
-                            Date endDate = new Date(Integer.valueOf(listeEnd[0]),
-                                                      Integer.valueOf(listeEnd[1]),
-                                                      Integer.valueOf(listeEnd[2]));
-                           
-                            AuthKey newAuthKey = authKeyManager.getRandomAuthKey(username, startDate, endDate);
-                            request.setAttribute("theAuthKey", newAuthKey);
+                            /*correction if the user put a start date after the
+                                end date we switch the two dates*/
+                            if(startD.compareTo(endD) > 0){
+                                String temp = startD;
+                                startD = endD;
+                                endD = temp;
+                            }
+                            
+                            authKeyManager.addRandomAuthKey(username, startD, endD);                                             
                         }
-                        request.getRequestDispatcher("pages/pageView.jsp").forward(request, response);  
-                    }
+                        else if(newMultiKey != null && newMultiKey.equals("newMultiKey"))
+                        {  
+                            int nbKeys = Integer.valueOf((String)request.getParameter("numberKeys"));
+                            
+                            authKeyManager.addRandomAuthKey(username, nbKeys);                                             
+                        }
+                        else if(changePage != null)
+                        {
+                            int currPage = Integer.valueOf((String)request.getSession().getAttribute("currentPage"));
+                            if(changePage.equals("left") && currPage > 1)
+                            {
+                                request.getSession().setAttribute("currentPage", String.valueOf(currPage-1));
+                            }
+                            else if(changePage.equals("right") && currPage*nbRow < authKeyManager.getNbAuthKeys())
+                            {
+                                request.getSession().setAttribute("currentPage", String.valueOf(currPage+1));
+                            }
+                        }
+                        else if(orderBy != null)
+                        {
+                            String sqlOrdering = null;
+                            String lastOrderBy = (String)request.getSession().getAttribute("lastOrderBy");
+                            if(orderBy.equals("auth"))
+                            {
+                                sqlOrdering = "auth_key";
+                            }
+                            else if(orderBy.equals("owner"))
+                            {
+                                sqlOrdering = "usr_nom";
+                            }
+                            else if(orderBy.equals("start"))
+                            {
+                                sqlOrdering = "init_date";
+                            }
+                            else if(orderBy.equals("end"))
+                            {
+                                sqlOrdering = "end_date";
+                            }
+                            //if already push, change the 
+                            if(orderBy.equals(lastOrderBy))
+                            {
+                                sqlOrdering = sqlOrdering + " DESC";
+                                request.getSession().setAttribute("lastOrderBy", "");
+                            }
+                            else
+                            {
+                                sqlOrdering = sqlOrdering + " ASC";
+                                request.getSession().setAttribute("lastOrderBy", orderBy);
+                            }
                                 
+                            request.getSession().setAttribute("orderBy", sqlOrdering);
+                        }
+                        else if(numberRows != null)
+                        {
+                            request.getSession().setAttribute("nbRows", numberRows);
+                            nbRow = Integer.valueOf((String)request.getSession().getAttribute("nbRows"));
+                        }
+                        else if(modifyKey!= null)
+                        {
+                            String startD = (String)request.getParameter("startDate");
+                            String endD =   (String)request.getParameter("endDate");
+                            
+                            /*correction if the user put a start date after the
+                                end date we switch the two dates*/
+                            if(startD.compareTo(endD) > 0){
+                                String temp = startD;
+                                startD = endD;
+                                endD = temp;
+                            }
+                            
+                            authKeyManager.modifyKey(modifyKey, startD, endD);
+                        }
+                        
+                        request.getSession().setAttribute("authKeys", 
+                                authKeyManager.getAuthKeyList(nbRow, 
+                                        Integer.valueOf((String)request.getSession().getAttribute("currentPage")), 
+                                        (String)request.getSession().getAttribute("orderBy")));
+                        
+                        request.getSession().setAttribute("nbKeys", String.valueOf(authKeyManager.getNbAuthKeys()));
+                        request.getRequestDispatcher("pages/pageView.jsp").forward(request, response);  
+                    }                   
         }
     }
 

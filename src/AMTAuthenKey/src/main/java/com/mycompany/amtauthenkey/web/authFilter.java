@@ -51,7 +51,7 @@ public class authFilter implements Filter {
          //if on unrestricted, do not filter (css, js etc on this folder
         String path = request.getRequestURI().substring( request.getContextPath().length() );
         
-        if ( path.startsWith( "/pages/unrestricted" ) ) {
+        if ( path.startsWith( "/pages/unrestricted" ) || path.startsWith("/registerControl") ) {
             chain.doFilter( request, response );
             return;
         }
@@ -61,12 +61,12 @@ public class authFilter implements Filter {
         /**
          * if username doesnt exist, redirection to login page
          */
-        if ( session.getAttribute("username") == null && request.getParameter("username") == null ) {
-            System.out.println("filter username=null");
+        if ( session.getAttribute("username") == null) {
              request.getRequestDispatcher( "/loginControl").forward( request, response );
-          } else {
-            //if there is a username, the client is connected -> he can acces the site            
-            chain.doFilter( request, response );
+          }
+        else {
+            //if there is a username, the client is connected -> he can acces the site         
+            request.getRequestDispatcher("/mainControl").forward(request, response);
         }
         
     }

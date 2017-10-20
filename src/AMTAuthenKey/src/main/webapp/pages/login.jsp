@@ -30,9 +30,9 @@
       <div class="card-body">
         <form method="POST" action="loginControl" >
           <div class="form-group">
-            <label for="exampleInputEmail1">Email address</label>
+            <label for="exampleInputEmail1">Username</label>
             <input class="form-control" name ="inputUsername" id="inputUsername"
-                   type="text" aria-describedby="emailHelp" placeholder="Enter email">
+                   type="text" aria-describedby="emailHelp" placeholder="Enter username">
             </div>
           <div class="form-group">
             <label for="exampleInputPassword1">Password</label>

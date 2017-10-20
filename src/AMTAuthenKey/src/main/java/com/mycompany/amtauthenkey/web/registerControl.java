@@ -5,7 +5,7 @@
  */
 package com.mycompany.amtauthenkey.web;
 
-import com.mycompany.amtauthenkey.servicies.RegisterManager;
+import com.mycompany.amtauthenkey.servicies.buisness.RegisterManager;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.ejb.EJB;
@@ -44,7 +44,22 @@ public class registerControl extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        System.out.println("ahahahaha");
+         String username = request.getParameter("username");
+            String password = request.getParameter("password");
+            String passwordBis = request.getParameter("passwordBis");
+            
+            if(username !=null && password != null && !username.isEmpty()
+                    && !password.isEmpty() && password.equals(passwordBis)
+                    && !registerManager.isUserAlreadyOnDataBase(username))
+            {
+                registerManager.addUser(username, password);
+                request.getRequestDispatcher("loginControl").forward(request, response);
+            }
+            else
+            {
+                //giving the jsp the control of request and response
+                request.getRequestDispatcher("pages/register.jsp").forward(request, response);
+            }
     }
 
     /**
@@ -58,18 +73,16 @@ public class registerControl extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-            System.out.println("registerControl doPost");
+
             String username = request.getParameter("username");
             String password = request.getParameter("password");
             String passwordBis = request.getParameter("passwordBis");
-            System.out.println(username+" "+password+" "+passwordBis);
             
             if(username !=null && password != null && !username.isEmpty()
                     && !password.isEmpty() && password.equals(passwordBis)
                     && !registerManager.isUserAlreadyOnDataBase(username))
             {
-                System.out.println("account created");
+                registerManager.addUser(username, password);
                 request.getRequestDispatcher("loginControl").forward(request, response);
             }
             else

@@ -15,11 +15,11 @@ public class AuthKey {
 
     private String authKey;
     private String owner;
-    private Date startDate;
-    private Date endDate;
+    private String startDate;
+    private String endDate;
 
 
-    public AuthKey(String authKey, String owner, Date startDate, Date endDate) {
+    public AuthKey(String authKey, String owner, String startDate, String endDate) {
         this.authKey = authKey;
         this.owner = owner;
         this.startDate = startDate;
@@ -34,11 +34,11 @@ public class AuthKey {
     public String getOwner(){
         return owner;
     }
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public Date getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
     

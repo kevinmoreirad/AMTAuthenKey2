@@ -8182,4 +8182,5 @@ a.text-dark:focus, a.text-dark:hover {
 .invisible {
   visibility: hidden !important;
 }
+ tr:hover td { background: #9b59b6 !important;}
 /*# sourceMappingURL=bootstrap.css.map */

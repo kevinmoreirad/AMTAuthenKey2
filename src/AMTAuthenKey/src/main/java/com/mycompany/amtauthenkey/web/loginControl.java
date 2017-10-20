@@ -1,8 +1,8 @@
 
 package com.mycompany.amtauthenkey.web;
 
-import com.mycompany.amtauthenkey.servicies.AuthKeyManager;
-import com.mycompany.amtauthenkey.servicies.LoginManager;
+import com.mycompany.amtauthenkey.servicies.buisness.AuthKeyManager;
+import com.mycompany.amtauthenkey.servicies.buisness.LoginManager;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.ejb.EJB;
@@ -43,8 +43,7 @@ public class loginControl extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-                System.out.println("do Get loginControl");
-             //if the login info are null or not in the database, we send to the login page
+         //if the login info are null or not in the database, we send to the login page
          String username = request.getParameter("inputUsername");
          String password = request.getParameter("inputPassword");
          
@@ -55,8 +54,7 @@ public class loginControl extends HttpServlet {
            request.getRequestDispatcher("pages/login.jsp").forward(request, response); 
         }
         else
-        {
-           
+        {     
            request.getRequestDispatcher("pages/mainControl").forward(request, response);  
         }
             
@@ -75,14 +73,12 @@ public class loginControl extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
       
-        System.out.println("do Post loginControl");
         String username = request.getParameter("inputUsername");
         String password = request.getParameter("inputPassword");
         String register = request.getParameter("register");
         
         if(register != null && register.equals("register"))
         {
-            System.out.println(register);
             request.getRequestDispatcher("registerControl").forward(request, response);  
         }
         //if the login info are null or not in the database, we send to the login page

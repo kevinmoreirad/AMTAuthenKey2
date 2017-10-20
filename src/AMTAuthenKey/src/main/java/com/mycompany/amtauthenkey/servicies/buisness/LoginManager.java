@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.amtauthenkey.servicies;
+package com.mycompany.amtauthenkey.servicies.buisness;
 
+import com.mycompany.amtauthkey.services.dao.DataBaseManager;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 /**
@@ -13,15 +15,11 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class LoginManager {
+    @EJB
+    private DataBaseManager dataBaseManager;  
+    
    public boolean isOnDataBase(String name, String pass){
-       if(name.equals("kevin") && pass.equals("1234"))
-       {
-           return true;
-       }
-       else
-       {
-           return false;
-       }
+       return dataBaseManager.isLoginInDB(name, pass);
    }
     
 }

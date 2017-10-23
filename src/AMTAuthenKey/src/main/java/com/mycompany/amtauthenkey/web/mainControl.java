@@ -56,7 +56,7 @@ public class mainControl extends HttpServlet {
             throws ServletException, IOException {
                 try (PrintWriter out = response.getWriter()) {
                     
-                    //setting current page first to 1
+                    //setting values by default 
                     if(request.getSession().getAttribute("currentPage") == null)
                     {
                         request.getSession().setAttribute("currentPage", "1");
@@ -75,9 +75,11 @@ public class mainControl extends HttpServlet {
                     }
                     
                     int nbRow = Integer.valueOf((String)request.getSession().getAttribute("nbRows"));
+                    
                      //getting the username of the connected client.
                     String username = (String)request.getSession().getAttribute("username");
 
+                    //getting request parameters who come from jsp pages
                     String logout = (String)request.getParameter("logout");
                     String newUniqueKey = (String)request.getParameter("newUniqueKey");
                     String newMultiKey = (String)request.getParameter("newMultiKey");
@@ -87,14 +89,17 @@ public class mainControl extends HttpServlet {
                     String modifyKey =(String)request.getParameter("modifyKey");
                     
                     int numberKeys = authKeyManager.getNbAuthKeys();
+                    //if we come from logout we remove attributes, 
+                    //so the filter didnt send us again on main page
                     if(logout != null && logout.equals("logout"))
                     {
                         request.getSession().removeAttribute("username");
                         request.getSession().removeAttribute("password");
                         request.getRequestDispatcher("loginControl").forward(request, response);
                     }
-                    else
+                    else // if not logout
                     {
+                        //if we add a new key unique
                         if(newUniqueKey != null && newUniqueKey.equals("newUniqueKey"))
                         {  
                             String startD = (String)request.getParameter("startDate");

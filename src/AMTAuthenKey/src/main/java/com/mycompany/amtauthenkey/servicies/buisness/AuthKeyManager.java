@@ -11,7 +11,7 @@ import java.util.Random;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 /**
- *
+ * Manager of the Authentifications keys
  * @author kevin moreira
  */
 @Stateless
@@ -19,8 +19,15 @@ public class AuthKeyManager {
     @EJB
     private DataBaseManager dataBaseManager;  
     
+    //char possible for creating the authentification key
     private final String CHARFORKEY = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
     
+    /**
+     * adding a random key. called when adding done number of keys
+     * @param owner the owner of the key
+     * @param startDate start date of the key
+     * @param endDate end date of the key
+     */
     public void addRandomAuthKey(String owner, String startDate, String endDate)
     {        
         AuthKey authKey = new AuthKey(getRandomKey(), owner, startDate, endDate);
@@ -44,17 +51,32 @@ public class AuthKeyManager {
         return key;
     }
     
-    
+    /**
+     * getting a list of AuthKey wanted
+     * @param numRows number of authkeys 
+     * @param page page we want to get
+     * @param orderBy the way we want to order the list
+     * @return list of authentifiacation keys
+     */
     public List<AuthKey> getAuthKeyList(int numRows, int page, String orderBy)
     {       
        return dataBaseManager.getAuthKeyList(numRows, page, orderBy);
     }
    
+    /**
+     * 
+     * @return number of authkeys
+     */
    public int getNbAuthKeys()
    {
        return dataBaseManager.getNbAuthKeys();
    }
 
+   /**
+    * addding nbKeys of random keys
+    * @param username the owner of the keys
+    * @param nbKeys number keys
+    */
     public void addRandomAuthKey(String username, int nbKeys) {
         for(int i = 0; i < nbKeys; i++)
         {
@@ -63,6 +85,10 @@ public class AuthKeyManager {
         }
     }
     
+    /**
+     * 
+     * @return list of two dates between 2017 and 2100. the first date is always before the second
+     */
     private List<String> getTwoDate()
     {
         int randYear1 = randBetween(2017, 2100);
@@ -116,10 +142,22 @@ public class AuthKeyManager {
         return listDate;
     }
     
+    /**
+     * 
+     * @param start
+     * @param end
+     * @return int between start and end
+     */
     private int randBetween(int start, int end) {
         return start + (int)Math.round(Math.random() * (end - start));
     }
 
+    /**
+     * modify the key with authkey name modifyKeyId
+     * @param modifyKeyId authkey to modify
+     * @param startDate new sttart date
+     * @param endDate new end date
+     */
     public void modifyKey(String modifyKeyId, String startDate, String endDate) {
        dataBaseManager.modifyKeyInDb(modifyKeyId, startDate, endDate);
     }

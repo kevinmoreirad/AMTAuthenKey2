@@ -31,12 +31,22 @@ public class DataBaseManager {
     @Resource(lookup = "java:/jdbc/db_amt")
     private DataSource dataSource;
     
+    /**
+     * 
+     * @param username
+     * @param password
+     * @return boolean true if username-password is on db, false otherwise
+     */
     public boolean isLoginInDB(String username, String password)
     {
         try {
             Connection connection = dataSource.getConnection();
+          
             PreparedStatement pstmt = connection.prepareStatement("SELECT nom FROM "
-                    + "usr WHERE nom = '"+username+"' AND mdp='"+password+"'");
+                    + "usr WHERE nom = ? AND mdp= ?");
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            
             ResultSet rs = pstmt.executeQuery();
             boolean temp = rs.first();
             connection.close();
@@ -47,13 +57,18 @@ public class DataBaseManager {
         }
         return false;
     }
-    
+    /**
+     * 
+     * @param username
+     * @return true if username is on db false otherwise
+     */
     public boolean isUsernameInDB(String username)
     {
          try {
             Connection connection = dataSource.getConnection();
             PreparedStatement pstmt = connection.prepareStatement("SELECT nom FROM "
-                    + "usr WHERE nom = '"+username+"'");
+                    + "usr WHERE nom = ?");
+            pstmt.setString(1, username);
             ResultSet rs = pstmt.executeQuery();
             boolean temp = rs.first();
             connection.close();
@@ -64,14 +79,19 @@ public class DataBaseManager {
         }
         return false;   
     }
-
+    /**
+     * adding user unsername-password to the db
+     * @param username
+     * @param password 
+     */
     public void addUserInDB(String username, String password) 
     {
         try
         {
             Connection connection = dataSource.getConnection();
-            PreparedStatement pstmt = connection.prepareStatement("INSERT INTO usr (nom, mdp) VALUES ('"
-                    +username+"', '"+password+"')");
+            PreparedStatement pstmt = connection.prepareStatement("INSERT INTO usr (nom, mdp) VALUES (?, ?)");
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
             pstmt.executeUpdate();
             connection.close();
         }
@@ -87,8 +107,11 @@ public class DataBaseManager {
             Connection connection = dataSource.getConnection();
             PreparedStatement pstmt = connection.prepareStatement(
                     "INSERT INTO auth_key (auth_key, init_date, end_date, usr_nom) "
-                    + "VALUES ('"+authKey.getAuthKey()+"', '"+authKey.getStartDate()+"', '"
-                    + authKey.getEndDate()+"', '"+ authKey.getOwner()+"')");
+                    + "VALUES ( ?, ?, ?, ?)");
+            pstmt.setString(1, authKey.getAuthKey());
+            pstmt.setString(2, authKey.getStartDate());
+            pstmt.setString(3, authKey.getEndDate());
+            pstmt.setString(4, authKey.getOwner());
             pstmt.executeUpdate();
             connection.close();
         }
@@ -105,8 +128,7 @@ public class DataBaseManager {
            Connection connection = dataSource.getConnection();
            
             PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM "
-                    + "auth_key"+ " ORDER BY "+orderBy+" LIMIT " + numRows + " OFFSET " + numRows*(page-1)
-                    );
+                    + "auth_key ORDER BY "+orderBy+" LIMIT "+numRows+" OFFSET "+numRows*(page-1));
             ResultSet rs = pstmt.executeQuery();
        
             while(rs.next())
@@ -154,7 +176,6 @@ public class DataBaseManager {
             Statement stmt = connection.createStatement();
             String selectquery = "UPDATE auth_key SET init_date = '"+startDate+"', end_date = '"
                                 +endDate+"' WHERE auth_key = '"+modifyKeyId+"'";
-            System.out.println(selectquery);
             stmt.executeUpdate(selectquery);
             
             connection.close();

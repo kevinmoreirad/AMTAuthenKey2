@@ -53,6 +53,8 @@ public class loginControl extends HttpServlet {
                 String username = request.getParameter("inputUsername");
                 String password = request.getParameter("inputPassword");
                 String encryptedPassword ="";
+                
+                //encrypting the password
                 if(password != null)
                 {
                     MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
@@ -94,6 +96,7 @@ public class loginControl extends HttpServlet {
                 String register = request.getParameter("register");
                 
                 String encryptedPassword="";
+                //encrypting
                 if(password != null)
                 { 
                     MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");

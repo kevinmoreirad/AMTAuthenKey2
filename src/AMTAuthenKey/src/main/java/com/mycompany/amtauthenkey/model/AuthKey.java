@@ -8,7 +8,7 @@ package com.mycompany.amtauthenkey.model;
 import java.util.Date;
 
 /**
- *
+ * AuthKey represent a auth key his owner and start and end dates
  * @author kevin moreira
  */
 public class AuthKey {
@@ -18,7 +18,13 @@ public class AuthKey {
     private String startDate;
     private String endDate;
 
-
+    /**
+     * constructor
+     * @param authKey The authentification key
+     * @param owner creator of the key
+     * @param startDate start date of key
+     * @param endDate  end date of key
+     */
     public AuthKey(String authKey, String owner, String startDate, String endDate) {
         this.authKey = authKey;
         this.owner = owner;

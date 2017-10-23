@@ -87,7 +87,7 @@ public class registerControl extends HttpServlet {
                     && !password.isEmpty() && password.equals(passwordBis)
                     && !registerManager.isUserAlreadyOnDataBase(username))
             {
-                try {
+                try {//encryption the password
                     MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
                     messageDigest.update(password.getBytes());
                     String encryptedPassword = new String(messageDigest.digest());

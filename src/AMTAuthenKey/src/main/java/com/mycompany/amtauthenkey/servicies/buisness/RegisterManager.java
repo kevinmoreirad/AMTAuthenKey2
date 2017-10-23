@@ -19,11 +19,21 @@ public class RegisterManager {
     @EJB
     private DataBaseManager dataBaseManager;  
     
+    /**
+     * 
+     * @param username
+     * @return true if the username is already on database false otherwise
+     */
     public boolean isUserAlreadyOnDataBase(String username)
     {
         return dataBaseManager.isUsernameInDB(username);
     }
 
+    /**
+     * add user on dataBase
+     * @param username username to add  
+     * @param password password of username
+     */
     public void addUser(String username, String password) 
     {
        dataBaseManager.addUserInDB(username, password);

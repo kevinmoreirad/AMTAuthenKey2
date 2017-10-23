@@ -18,6 +18,12 @@ public class LoginManager {
     @EJB
     private DataBaseManager dataBaseManager;  
     
+    /**
+     * 
+     * @param name
+     * @param pass
+     * @return boolean true if the name-pass is on the database, false if not 
+     */
    public boolean isOnDataBase(String name, String pass){
        return dataBaseManager.isLoginInDB(name, pass);
    }

@@ -8,8 +8,8 @@ to deploy the program juste use docker-compose up --build      on /topology-amt.
 
 ## access the differents parts
 
-To access the site  :9091/AMTProjectBootcamp-1.0-SNAPSHOT/ (if server accessible in localhost -> http:localhost:9091/AMTProjectBootcamp-1.0-SNAPSHOT/
-To access phpmyadmin :6060/ and use username: root password: adminpw (if server accessible in localhost -> http:localhost:6060/
+To access the site  :9091/AMTProjectBootcamp-1.0-SNAPSHOT/ (if server accessible in localhost -> localhost:9091/AMTProjectBootcamp-1.0-SNAPSHOT/
+To access phpmyadmin :6060/ and use username: root password: adminpw (if server accessible in localhost -> localhost:6060/
 
 ## How to
 to use, register and connect. You have several buttons to add auth Keys and change page of table. On top you can logout. 

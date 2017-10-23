@@ -13,7 +13,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.security.MessageDigest;
 /**
  *
  * @author kevin moreira
@@ -44,7 +48,7 @@ public class registerControl extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         String username = request.getParameter("username");
+            String username = request.getParameter("username");
             String password = request.getParameter("password");
             String passwordBis = request.getParameter("passwordBis");
             
@@ -52,6 +56,7 @@ public class registerControl extends HttpServlet {
                     && !password.isEmpty() && password.equals(passwordBis)
                     && !registerManager.isUserAlreadyOnDataBase(username))
             {
+                
                 registerManager.addUser(username, password);
                 request.getRequestDispatcher("loginControl").forward(request, response);
             }
@@ -82,8 +87,16 @@ public class registerControl extends HttpServlet {
                     && !password.isEmpty() && password.equals(passwordBis)
                     && !registerManager.isUserAlreadyOnDataBase(username))
             {
-                registerManager.addUser(username, password);
-                request.getRequestDispatcher("loginControl").forward(request, response);
+                try {
+                    MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+                    messageDigest.update(password.getBytes());
+                    String encryptedPassword = new String(messageDigest.digest());
+                    
+                    registerManager.addUser(username, encryptedPassword);
+                    request.getRequestDispatcher("loginControl").forward(request, response);
+                } catch (NoSuchAlgorithmException ex) {
+                    Logger.getLogger(registerControl.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             else
             {

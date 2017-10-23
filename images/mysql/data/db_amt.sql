@@ -5,7 +5,7 @@ USE db_amt;
 
 CREATE TABLE usr(
 	nom varchar(30) PRIMARY KEY,
-    mdp varchar(30)
+    mdp varchar(64)
 );
 
 CREATE TABLE auth_key(

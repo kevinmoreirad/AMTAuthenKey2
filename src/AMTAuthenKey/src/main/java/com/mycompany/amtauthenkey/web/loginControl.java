@@ -5,12 +5,17 @@ import com.mycompany.amtauthenkey.servicies.buisness.AuthKeyManager;
 import com.mycompany.amtauthenkey.servicies.buisness.LoginManager;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.security.MessageDigest;
 
 /**
  *
@@ -43,20 +48,30 @@ public class loginControl extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-         //if the login info are null or not in the database, we send to the login page
-         String username = request.getParameter("inputUsername");
-         String password = request.getParameter("inputPassword");
-         
-        //if the login info are null or not in the database, we send to the login page
-        if((username == null && password == null) || 
-                !loginManager.isOnDataBase(username, password))
-        {
-           request.getRequestDispatcher("pages/login.jsp").forward(request, response); 
-        }
-        else
-        {     
-           request.getRequestDispatcher("pages/mainControl").forward(request, response);  
-        }
+            try {
+                //if the login info are null or not in the database, we send to the login page
+                String username = request.getParameter("inputUsername");
+                String password = request.getParameter("inputPassword");
+                String encryptedPassword ="";
+                if(password != null)
+                {
+                    MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+                    messageDigest.update(password.getBytes());
+                     encryptedPassword = new String(messageDigest.digest());
+                }
+               
+                //if the login info are null or not in the database, we send to the login page
+                if((username == null && password == null) ||
+                        !loginManager.isOnDataBase(username,encryptedPassword))
+                {
+                    request.getRequestDispatcher("pages/login.jsp").forward(request, response);
+                }
+                else
+                {
+                    request.getRequestDispatcher("pages/mainControl").forward(request, response);
+                }   } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(loginControl.class.getName()).log(Level.SEVERE, null, ex);
+            }
             
             
     }
@@ -73,28 +88,38 @@ public class loginControl extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
       
-        String username = request.getParameter("inputUsername");
-        String password = request.getParameter("inputPassword");
-        String register = request.getParameter("register");
-        
-        if(register != null && register.equals("register"))
-        {
-            request.getRequestDispatcher("registerControl").forward(request, response);  
-        }
-        //if the login info are null or not in the database, we send to the login page
-        else if((username == null && password == null) || 
-                !loginManager.isOnDataBase(username, password))
-        {
-           request.getRequestDispatcher("pages/login.jsp").forward(request, response); 
-        }
-        else
-        {
-             //getting session from request
-            HttpSession session = request.getSession();
-            session.setAttribute("username", username);
-            session.setAttribute("password", password);
-            request.getRequestDispatcher("mainControl").forward(request, response);    
-        }
+            try {
+                String username = request.getParameter("inputUsername");
+                String password = request.getParameter("inputPassword");
+                String register = request.getParameter("register");
+                
+                String encryptedPassword="";
+                if(password != null)
+                { 
+                    MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+                    messageDigest.update(password.getBytes());
+                    encryptedPassword = new String(messageDigest.digest());
+                }
+                if(register != null && register.equals("register"))
+                {
+                    request.getRequestDispatcher("registerControl").forward(request, response);
+                }
+                //if the login info are null or not in the database, we send to the login page
+                else if((username == null && password == null) ||
+                        !loginManager.isOnDataBase(username, encryptedPassword))
+                {
+                    request.getRequestDispatcher("pages/login.jsp").forward(request, response);
+                }
+                else
+                {
+                    //getting session from request
+                    HttpSession session = request.getSession();
+                    session.setAttribute("username", username);
+                    session.setAttribute("password", password);
+                    request.getRequestDispatcher("mainControl").forward(request, response);
+                }   } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(loginControl.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }
     /**
      * Returns a short description of the servlet.

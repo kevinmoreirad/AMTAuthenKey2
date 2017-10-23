@@ -87,7 +87,8 @@ public class mainControl extends HttpServlet {
                     String orderBy = (String)request.getParameter("orderBy");
                     String numberRows = ((String)request.getParameter("numberRows"));
                     String modifyKey =(String)request.getParameter("modifyKey");
-                    
+                    String deleteKey =(String)request.getParameter("deleteKey");
+                                        
                     int numberKeys = authKeyManager.getNbAuthKeys();
                     //if we come from logout we remove attributes, 
                     //so the filter didnt send us again on main page
@@ -187,7 +188,10 @@ public class mainControl extends HttpServlet {
                             
                             authKeyManager.modifyKey(modifyKey, startD, endD);
                         }
-                        
+                        else if(deleteKey!= null)
+                        {
+                            authKeyManager.deleteKey(deleteKey);
+                        }
                         request.getSession().setAttribute("authKeys", 
                                 authKeyManager.getAuthKeyList(nbRow, 
                                         Integer.valueOf((String)request.getSession().getAttribute("currentPage")), 

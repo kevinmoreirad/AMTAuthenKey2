@@ -161,5 +161,9 @@ public class AuthKeyManager {
     public void modifyKey(String modifyKeyId, String startDate, String endDate) {
        dataBaseManager.modifyKeyInDb(modifyKeyId, startDate, endDate);
     }
+
+    public void deleteKey(String deleteKey) {
+        dataBaseManager.deleteKeyInDb(deleteKey);
+    }
     
 }

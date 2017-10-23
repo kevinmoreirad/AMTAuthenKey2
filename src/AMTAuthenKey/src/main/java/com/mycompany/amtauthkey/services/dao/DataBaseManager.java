@@ -185,4 +185,19 @@ public class DataBaseManager {
             Logger.getLogger(DataBaseManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    public void deleteKeyInDb(String deleteKey) {
+        try
+        {
+            Connection connection = dataSource.getConnection();
+            PreparedStatement st = connection.prepareStatement("DELETE FROM auth_key WHERE auth_key = '" + deleteKey + "';");
+            st.executeUpdate();
+            
+            connection.close();
+        }
+        catch (SQLException ex)
+        {
+            Logger.getLogger(DataBaseManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

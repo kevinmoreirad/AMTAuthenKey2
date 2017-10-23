@@ -255,6 +255,10 @@
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                 <button class="btn btn-primary" type="submit">Modify Now!</button>
             </form>
+              <form method="POST" action="mainControl">
+                   <input id="deleteKeyId" name ="deleteKey" type="hidden"> 
+                   <button class="btn btn-primary" style="background-color: #240,52,52" type="submit">Delete the key!</button>
+              </form>
           </div>
         </div>
       </div>
@@ -301,7 +305,8 @@
         {
             document.getElementById("authNumber").innerHTML = param;
             document.getElementById("modifyKeyId").value = param;
-            $('#modifykeyModal').modal('show')
+            document.getElementById("deleteKeyId").value = param;
+            $('#modifykeyModal').modal('show');
         };
 </script>
   </div>
